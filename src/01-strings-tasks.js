@@ -325,7 +325,7 @@ function getCardId(value) {
   let nums = ['A', '2', '3', '4', '5', '6', '7', '8', '9','1', 'J', 'Q', 'K'];
   let syms = ['♣', '♦', '♥', '♠'];
 
-  return nums.indexOf(value[0]) = syms.indexOf(value[-1]);
+  return nums.indexOf(value[0]) + syms.indexOf(value[-1]);
 }
 
 module.exports = {
