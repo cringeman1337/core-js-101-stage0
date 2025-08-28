@@ -109,9 +109,10 @@ function removeLeadingAndTrailingWhitespaces(value) {
  */
 function repeatString(value, count) {
   let str = '';
-  while (count > 0)
-  {
+  let ctr = count;
+  while (ctr > 0) {
     str += value;
+    ctr -= 1;
   }
   return str;
 }
@@ -205,39 +206,21 @@ function extractEmails(str) {
  */
 function getRectangleString(width, height) {
   let str = '';
-  for (let i = 0; i < height; i++)
-  {
-    for (let j = 0; i < width; i++)
-    {
-      if (i == 0 && j == 0)
-      {
-        str += '┌';
-      }
-      else if (i == 0 && j == width - 1)
-      {
-        str += '┐';
-      }
-      else if (i == height - 1 && j == 0)
-      {
-        str += '└';
-      }
-      else if (i == height - 1 && j == width - 1)
-      {
-        str += '┘';
-      }
+  const c1 = '┌';
+  const c2 = '┐';
+  const c3 = '└';
+  const c4 = '┘';
+  const l1 = '─';
+  const l2 = '│';
+  const e = ' ';
+  const n = '\n';
 
-      else if (i == 0 || i == height - 1)
-      {
-        str += '─';
-      }
-
-      else if (j == 0 || j == width - 1)
-      {
-        str += '│';
-      }
-    }
-    str += '\n';
+  str += c1 + l1.repeat(width - 2) + c2 + n;
+  for (let i = 0; i < height - 2; i += 1) {
+    str += l2 + e.repeat(width - 2) + l2 + n;
   }
+  str += c3 + l1.repeat(width - 2) + c4 + n;
+
   return str;
 }
 
@@ -258,22 +241,29 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-  let p1 = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'];
-  let p2 = ['n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  const p1 = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'];
+  const p2 = ['n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
-  for (let i = 0; i < str.length; i++)
-  {
-    if (p1.includes(str[i]))
-    {
-      str[i] = p2[p1.indexOf(str[i])];
-    }
-    else
-    {
-      str[i] = p1[p2.indexOf(str[i])];
+  const p3 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
+  const p4 = ['N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+  let str2 = '';
+
+  for (let i = 0; i < str.length; i += 1) {
+    if (p1.includes(str[i])) {
+      str2 += p2[p1.indexOf(str[i])];
+    } else if (p2.includes(str[i])) {
+      str2 += p1[p2.indexOf(str[i])];
+    } else if (p3.includes(str[i])) {
+      str2 += p4[p3.indexOf(str[i])];
+    } else if (p4.includes(str[i])) {
+      str2 += p3[p4.indexOf(str[i])];
+    } else {
+      str2 += str[i];
     }
   }
 
-  return str;
+  return str2;
 }
 
 /**
@@ -290,8 +280,7 @@ function encodeToRot13(str) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
-  if (typeof(value) === 'string')
-  {
+  if (typeof value === 'string' || value instanceof String === true) {
     return true;
   }
   return false;
@@ -322,10 +311,68 @@ function isString(value) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-  let nums = ['A', '2', '3', '4', '5', '6', '7', '8', '9','1', 'J', 'Q', 'K'];
-  let syms = ['♣', '♦', '♥', '♠'];
+  const cards = [
+    'A♣',
+    '2♣',
+    '3♣',
+    '4♣',
+    '5♣',
+    '6♣',
+    '7♣',
+    '8♣',
+    '9♣',
+    '10♣',
+    'J♣',
+    'Q♣',
+    'K♣',
+    'A♦',
+    '2♦',
+    '3♦',
+    '4♦',
+    '5♦',
+    '6♦',
+    '7♦',
+    '8♦',
+    '9♦',
+    '10♦',
+    'J♦',
+    'Q♦',
+    'K♦',
+    'A♥',
+    '2♥',
+    '3♥',
+    '4♥',
+    '5♥',
+    '6♥',
+    '7♥',
+    '8♥',
+    '9♥',
+    '10♥',
+    'J♥',
+    'Q♥',
+    'K♥',
+    'A♠',
+    '2♠',
+    '3♠',
+    '4♠',
+    '5♠',
+    '6♠',
+    '7♠',
+    '8♠',
+    '9♠',
+    '10♠',
+    'J♠',
+    'Q♠',
+    'K♠',
+  ];
 
-  return nums.indexOf(value[0]) + syms.indexOf(value[-1]);
+  for (let i = 0; i < cards.length; i += 1) {
+    if (value === cards[i]) {
+      return i;
+    }
+  }
+
+  return 0;
 }
 
 module.exports = {
